@@ -48,5 +48,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-postcss": "^0.5.5"
   },
-  "files": ["dist"]
+  "files": [
+    "dist"
+  ]
 }

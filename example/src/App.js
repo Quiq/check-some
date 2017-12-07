@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="App">
-          <AppBar />
+          <AppBar title="Check-Some Example" />
           <Card className="beerForm">
             <CardHeader>Beer Info</CardHeader>
             <CardText>
