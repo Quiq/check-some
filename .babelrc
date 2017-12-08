@@ -1,12 +1,16 @@
 {
   "presets": [
+    "flow",
     ["env", {
       "modules": false
     }],
     "stage-0",
     "react"
   ],
-  "plugins": [
-    "external-helpers"
-  ]
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs", "transform-flow-strip-types"]
+    }
+  }
+
 }

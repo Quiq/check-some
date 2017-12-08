@@ -105,10 +105,8 @@ export class Form extends React.Component<{}, FormState> {
   };
 
   renderStatusEmoji = (valid: boolean) => (valid ? '😃 ' : '😩 ');
-
   render() {
     const {name, favoriteBeer, age} = this.state;
-
     return (
       <CheckSome
         rules={{
@@ -186,5 +184,4 @@ export class Form extends React.Component<{}, FormState> {
     );
   }
 }
-
 export default Form;
