@@ -1,7 +1,8 @@
 [ignore]
-example/
+.*/example/.*
 
 [include]
+.src/
 
 [libs]
 
