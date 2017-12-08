@@ -32,6 +32,9 @@
       "src",
       "node_modules"
     ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
     "rootDir": ".",
     "notify": true
   },
