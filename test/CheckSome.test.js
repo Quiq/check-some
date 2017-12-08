@@ -65,4 +65,46 @@ describe('CheckSome', () => {
   it('renders the initial form', () => {
     expect(wrapper).toMatchSnapshot();
   });
+
+  describe('blurring the fields', () => {
+    beforeEach(() => {
+      wrapper.find('input').forEach(i => i.simulate('blur'));
+    });
+
+    it('sets the touched prop for fields', () => {
+      expect(wrapper).toMatchSnapshot();
+    });
+  });
+
+  describe('setting values to something still invalid', () => {
+    beforeEach(() => {
+      wrapper.setProps({
+        values: {
+          requiredString: 'spongebob',
+          testNumber: -2,
+          optionalString: 'patrick',
+        },
+      });
+    });
+
+    it('updates changed, values, and errors', () => {
+      expect(wrapper).toMatchSnapshot();
+    });
+  });
+
+  describe('setting values to something valid', () => {
+    beforeEach(() => {
+      wrapper.setProps({
+        values: {
+          requiredString: 'spongebob',
+          testNumber: 7,
+          optionalString: 'patrick',
+        },
+      });
+    });
+
+    it('updates changed, values, and errors', () => {
+      expect(wrapper).toMatchSnapshot();
+    });
+  });
 });
