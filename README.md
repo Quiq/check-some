@@ -3,9 +3,7 @@
 ## Component to help with form validation in react
 
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-
-> TODO: Test badge
-> TODO: NPM badge
+[![Build Status](https://travis-ci.org/Quiq/check-some.svg?branch=master)](https://travis-ci.org/Quiq/check-some)
 
 ## Our pain points
 
