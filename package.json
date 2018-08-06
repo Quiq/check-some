@@ -1,6 +1,6 @@
 {
   "name": "check-some",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Component to help with form validation in react",
   "author": "Nate Norberg",
   "license": "MIT",
