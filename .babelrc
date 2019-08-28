@@ -1,9 +1,9 @@
 {
   "presets": [
-    "@babel/flow",
     ["@babel/env", {
       "modules": false
     }],
+    "@babel/typescript",
     "@babel/react"
   ],
   "plugins": [
@@ -37,7 +37,7 @@
   ],
   "env": {
     "test": {
-      "presets": ["@babel/env", "@babel/react", "@babel/flow"]
+      "presets": ["@babel/env", "@babel/react", "@babel/typescript"]
     }
   }
 
