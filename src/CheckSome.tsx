@@ -18,8 +18,8 @@ export type CheckSomeChildProps = {
 
 export type CheckSomeProps = {
   rules: ValidationGroupRules,
-  values: Object, // TODO: Get a better type here
-  initialValues?: Object,
+  values: {[key: string]: any}, // TODO: Get a better type here
+  initialValues?: {[key: string]: any},
   children: (props: CheckSomeChildProps) => React.ReactNode,
 };
 
@@ -59,7 +59,7 @@ export default class CheckSome extends React.Component<CheckSomeProps> {
       const value = this.props.values[key];
 
       const newErrors = rules.reduce(
-        (e: ValidationErrors | null, rule: ValidationRule<string>) => e || rule(value),
+        (e: ValidationErrors | null, rule: ValidationRule) => e || rule(value),
         null,
       );
 
