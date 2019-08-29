@@ -54,7 +54,7 @@ export default class CheckSome extends React.Component<CheckSomeProps> {
   };
 
   getErrors = (): ValidationGroupErrors =>
-    Object.keys(this.props.rules).reduce((errors, key) => {
+    Object.keys(this.props.rules).reduce((errors: ValidationGroupErrors, key) => {
       const rules = this.props.rules[key];
       const value = this.props.values[key];
 
