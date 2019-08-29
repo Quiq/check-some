@@ -1,11 +1,6 @@
-// @flow
-import * as React from 'react';
+import React from 'react';
 import CheckSome from '../src';
-import Enzyme, {mount} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import type {ReactWrapper} from 'enzyme';
-
-Enzyme.configure({adapter: new Adapter()});
+import {render, fireEvent, RenderResult} from '@testing-library/react';
 
 const required = value => (value || value === 0 ? null : {required: {}});
 
@@ -41,7 +36,8 @@ const TestForm = ({valid, changed, errors}) => (
 );
 
 describe('CheckSome', () => {
-  let wrapper: ReactWrapper;
+  let r: RenderResult;
+  let testProps;
 
   beforeEach(() => {
     const values = {
@@ -55,56 +51,54 @@ describe('CheckSome', () => {
       testNumber: [required, greaterThanZero],
     };
 
-    wrapper = mount(
-      <CheckSome values={values} rules={rules}>
-        {formProps => <TestForm {...formProps} />}
-      </CheckSome>,
-    );
+    testProps = {values, rules};
+
+    r = render(<CheckSome {...testProps}>{formProps => <TestForm {...formProps} />}</CheckSome>);
   });
 
   it('renders the initial form', () => {
-    expect(wrapper).toMatchSnapshot();
+    expect(r.container).toMatchSnapshot();
+    expect(r.getAllByText('Pristine').length).toBe(3);
   });
 
   describe('blurring the fields', () => {
     beforeEach(() => {
-      wrapper.find('input').forEach(i => i.simulate('blur'));
+      r.container.querySelectorAll('input').forEach(i => fireEvent.blur(i));
     });
 
     it('sets the touched prop for fields', () => {
-      expect(wrapper).toMatchSnapshot();
+      expect(r.container).toMatchSnapshot();
+      expect(r.getAllByText('Touched').length).toBe(3);
     });
   });
 
   describe('setting values to something still invalid', () => {
     beforeEach(() => {
-      wrapper.setProps({
-        values: {
-          requiredString: 'spongebob',
-          testNumber: -2,
-          optionalString: 'patrick',
-        },
-      });
+      testProps.values = {
+        requiredString: 'spongebob',
+        testNumber: -2,
+        optionalString: 'patrick',
+      };
+      r.rerender(<CheckSome {...testProps}>{formProps => <TestForm {...formProps} />}</CheckSome>);
     });
 
     it('updates changed, values, and errors', () => {
-      expect(wrapper).toMatchSnapshot();
+      expect(r.container).toMatchSnapshot();
     });
   });
 
   describe('setting values to something valid', () => {
     beforeEach(() => {
-      wrapper.setProps({
-        values: {
-          requiredString: 'spongebob',
-          testNumber: 7,
-          optionalString: 'patrick',
-        },
-      });
+      testProps.values = {
+        requiredString: 'spongebob',
+        testNumber: 7,
+        optionalString: 'patrick',
+      };
+      r.rerender(<CheckSome {...testProps}>{formProps => <TestForm {...formProps} />}</CheckSome>);
     });
 
     it('updates changed, values, and errors', () => {
-      expect(wrapper).toMatchSnapshot();
+      expect(r.container).toMatchSnapshot();
     });
   });
 });

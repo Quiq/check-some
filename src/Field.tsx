@@ -1,8 +1,7 @@
-// @flow
-import * as React from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import {CHECK_SOME_CONTEXT} from './globals';
-import type {ValidationErrors} from './globals';
+import {ValidationErrors} from './globals';
 
 type CheckSomeFieldChildProps<T> = {
   value: T,
@@ -11,19 +10,16 @@ type CheckSomeFieldChildProps<T> = {
   valid: boolean,
 };
 
-type CheckSomeFieldProps = {
+type Props = {
   name: string,
-  children: (props: CheckSomeFieldChildProps<*>) => React.Node,
+  children: (props: CheckSomeFieldChildProps<any>) => React.ReactNode,
 };
 
-type CheckSomeFieldState = {
+type State = {
   touched: boolean,
 };
 
-export default class CheckSomeField extends React.Component<
-  CheckSomeFieldProps,
-  CheckSomeFieldState,
-> {
+export default class CheckSomeField extends React.Component<Props, State> {
   state = {
     touched: false,
   };

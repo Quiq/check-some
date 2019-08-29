@@ -1,14 +1,13 @@
-// @flow
-import * as React from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import CheckSomeField from './Field';
 import {CHECK_SOME_CONTEXT} from './globals';
-import type {ValidationErrors} from './globals';
+import {ValidationErrors} from './globals';
 
-type ValidationRule<T> = (value: T) => ValidationErrors | null;
+type ValidationRule = (value: any) => ValidationErrors | null;
 
-type ValidationGroupRules = {[name: string]: Array<ValidationRule<*>>};
+type ValidationGroupRules = {[name: string]: Array<ValidationRule>};
 type ValidationGroupErrors = {[name: string]: ValidationErrors} | null;
 
 export type CheckSomeChildProps = {
@@ -19,9 +18,9 @@ export type CheckSomeChildProps = {
 
 export type CheckSomeProps = {
   rules: ValidationGroupRules,
-  values: Object, // TODO: Get a better type here
-  initialValues?: Object,
-  children: (props: CheckSomeChildProps) => React.Node,
+  values: {[key: string]: any}, // TODO: Get a better type here
+  initialValues?: {[key: string]: any},
+  children: (props: CheckSomeChildProps) => React.ReactNode,
 };
 
 /* eslint-disable react/no-multi-comp */
@@ -31,7 +30,7 @@ export default class CheckSome extends React.Component<CheckSomeProps> {
     [CHECK_SOME_CONTEXT]: PropTypes.object.isRequired,
   };
 
-  initialValues: ?Object;
+  initialValues: Object | null | undefined;
 
   getChildContext() {
     return {
@@ -55,12 +54,12 @@ export default class CheckSome extends React.Component<CheckSomeProps> {
   };
 
   getErrors = (): ValidationGroupErrors =>
-    Object.keys(this.props.rules).reduce((errors, key) => {
+    Object.keys(this.props.rules).reduce((errors: ValidationGroupErrors, key) => {
       const rules = this.props.rules[key];
       const value = this.props.values[key];
 
       const newErrors = rules.reduce(
-        (e: ValidationErrors | null, rule: ValidationRule<*>) => e || rule(value),
+        (e: ValidationErrors | null, rule: ValidationRule) => e || rule(value),
         null,
       );
 
