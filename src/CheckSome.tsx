@@ -30,6 +30,10 @@ export default class CheckSome extends React.Component<CheckSomeProps> {
     [CHECK_SOME_CONTEXT]: PropTypes.object.isRequired,
   };
 
+  static defaultProps = {
+    rules: {},
+  };
+
   initialValues: Object | null | undefined;
 
   getChildContext() {

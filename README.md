@@ -99,7 +99,7 @@ You could then use this to render a cusomized error message
 {[key:string]: any}
 ```
 
-#### `rules` - Object containing rules for all values (keys should match values set in `values`)
+#### `rules` (optional) - Object containing rules for all values (keys should match values set in `values`)
 ```
 {[key:string]: null | {[errorName:string]: Object}}
 ```
