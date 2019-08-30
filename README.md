@@ -15,6 +15,10 @@ This can become quite a bit of work to add a single field and if you miss a spot
 
 This component receives the values and validation rules as props and renders your validated form using render props. The `CheckSome` component performs all the data validation and passes form state (such as `valid` or `changed`) to the form. The `CheckSome.Field` component accepts a render prop to render a specific field along with any validation errors and whether the field has been touched yet. This solution abstracts the validation logic while keeping flexibility for how to render error messages.
 
+## Requirements
+
+As of v1.0.0, check-some uses react hooks, so you need to have React 16.8 or higher installed
+
 ## Installation
 
 ```bash
@@ -83,9 +87,12 @@ Validation rules are defined as functions that take the value of a field and ret
 You could then use this to render a cusomized error message
 
 ```jsx
-{errors && errors.greaterThanFive && (
-  <div>Value needs to be greater than 5, but was {errors.greaterThanFive.value}.</div>
-)}
+{
+  errors &&
+    errors.greaterThanFive && (
+      <div>Value needs to be greater than 5, but was {errors.greaterThanFive.value}.</div>
+    );
+}
 ```
 
 ## Components
@@ -95,21 +102,25 @@ You could then use this to render a cusomized error message
 #### Props
 
 ##### `values` - Object containing all the values of the form
+
 ```
 {[key:string]: any}
 ```
 
 #### `rules` (optional) - Object containing rules for all values (keys should match values set in `values`)
+
 ```
 {[key:string]: null | {[errorName:string]: Object}}
 ```
 
 ##### `initialValues` (optional) - Object containing values to check against when finding out if form has changed
+
 ```
 {[key:string]: any}
 ```
 
 ##### `children` - Render prop for rendering the form
+
 ```
 (props: ChildProps) => React.Node
 ```
@@ -117,12 +128,15 @@ You could then use this to render a cusomized error message
 #### ChildProps (Props that will be passed to the render prop for `CheckSome`)
 
 ##### `valid` - If all the validation rules have passed
+
 `boolean`
 
 ##### `changed` - If all the values have changed since the component mounted (or if the same as `props.initialValues` if set)
+
 `boolean`
 
 ##### `errors` - Description of all the validation errors by field
+
 ```
 {
   [key:string]: null | {[errorName:string]: Object}
@@ -136,6 +150,7 @@ You could then use this to render a cusomized error message
 ##### `name` - The field to render (needs to match a key in `values` passed to `CheckSome`)
 
 ##### `children` - Render prop for rendering the field
+
 ```
 (props: ChildProps) => React.Node
 ```
@@ -143,17 +158,21 @@ You could then use this to render a cusomized error message
 #### ChildProps
 
 ##### `value` - The value passed in `values` of `CheckSome` that matches the name set in `CheckSome.Field`
+
 `any`
 
 ##### `errors` - Description of the validation errors for the field
+
 ```
 null | {[errorName:string]: Object}
 ```
 
 ##### `valid` - If the validation rules for the field have passed
+
 `boolean`
 
 ##### `touched` - If the field has been focused and blured
+
 `boolean`
 
 ## License

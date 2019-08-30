@@ -1,8 +1,6 @@
-import React from 'react';
-import * as PropTypes from 'prop-types';
+import React, {createContext} from 'react';
 import isEqual from 'lodash/isEqual';
 import CheckSomeField from './Field';
-import {CHECK_SOME_CONTEXT} from './globals';
 import {ValidationErrors} from './globals';
 
 type ValidationRule = (value: any) => ValidationErrors | null;
@@ -11,39 +9,33 @@ type ValidationGroupRules = {[name: string]: Array<ValidationRule>};
 type ValidationGroupErrors = {[name: string]: ValidationErrors} | null;
 
 export type CheckSomeChildProps = {
-  valid: boolean,
-  changed: boolean,
-  errors: ValidationGroupErrors,
+  valid: boolean;
+  changed: boolean;
+  errors: ValidationGroupErrors;
 };
 
 export type CheckSomeProps = {
-  rules: ValidationGroupRules,
-  values: {[key: string]: any}, // TODO: Get a better type here
-  initialValues?: {[key: string]: any},
-  children: (props: CheckSomeChildProps) => React.ReactNode,
+  rules: ValidationGroupRules;
+  values: {[key: string]: any}; // TODO: Get a better type here
+  initialValues?: {[key: string]: any};
+  children: (props: CheckSomeChildProps) => React.ReactNode;
 };
 
-/* eslint-disable react/no-multi-comp */
+interface Context {
+  values: {[key: string]: any};
+  errors: ValidationGroupErrors;
+}
+
+export const CheckSomeContext = createContext<Context>({values: {}, errors: {}});
+
 export default class CheckSome extends React.Component<CheckSomeProps> {
   static Field = CheckSomeField;
-  static childContextTypes = {
-    [CHECK_SOME_CONTEXT]: PropTypes.object.isRequired,
-  };
 
   static defaultProps = {
     rules: {},
   };
 
   initialValues: Object | null | undefined;
-
-  getChildContext() {
-    return {
-      [CHECK_SOME_CONTEXT]: {
-        values: this.props.values,
-        errors: this.getErrors(),
-      },
-    };
-  }
 
   getInitialValues = () => {
     if (this.props.initialValues) {
@@ -88,6 +80,10 @@ export default class CheckSome extends React.Component<CheckSomeProps> {
 
     const changed = !isEqual(values, this.getInitialValues());
 
-    return this.props.children({valid, errors, changed});
+    return (
+      <CheckSomeContext.Provider value={{values, errors}}>
+        {this.props.children({valid, errors, changed})}
+      </CheckSomeContext.Provider>
+    );
   }
 }
