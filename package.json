@@ -24,23 +24,16 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "src/**/*.js": [
-      "prettier --write",
-      "git add"
-    ]
+    "src/**/*.js": ["prettier --write", "git add"]
   },
   "jest": {
-    "modulePaths": [
-      "src",
-      "node_modules"
-    ],
+    "modulePaths": ["src", "node_modules"],
     "rootDir": ".",
     "notify": true
   },
   "peerDependencies": {
-    "prop-types": "^15.5.4",
-    "react": "^0.14.9 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.9 || ^15.0.0 || ^16.0.0"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -93,8 +86,6 @@
     "rollup-plugin-postcss": "^0.5.5",
     "typescript": "^3.6.2"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "dependencies": {}
 }
