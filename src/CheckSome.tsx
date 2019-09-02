@@ -22,7 +22,10 @@ export type CheckSomeProps<T> = {
   children: (props: CheckSomeChildProps<T>) => React.ReactNode;
 };
 
-export const CheckSomeContext = createContext({});
+export const CheckSomeContext = createContext<{
+  values: {[key: string]: any};
+  errors: {[key: string]: ValidationErrors | undefined} | null;
+}>({values: {}, errors: {}});
 
 export default class CheckSome<T> extends React.Component<CheckSomeProps<T>> {
   static Field = CheckSomeField;
@@ -85,29 +88,3 @@ export default class CheckSome<T> extends React.Component<CheckSomeProps<T>> {
     );
   }
 }
-
-const greaterThanZero = (value: number) => {
-  return value > 0 ? null : {greaterThanZero: {value}};
-};
-
-const startsWith = (startingText: string) => (value: string) =>
-  value.startsWith(startingText) ? null : {startsWith: {startingText, value}};
-
-const tsCheck = (
-  <CheckSome
-    values={{
-      stringField: 'string',
-      numberField: 7,
-    }}
-    initialValues={{
-      stringField: 'string',
-      numberField: 7,
-    }}
-    rules={{
-      stringField: [startsWith('test')],
-      numberField: [greaterThanZero],
-    }}
-  >
-    {() => <div />}
-  </CheckSome>
-);
