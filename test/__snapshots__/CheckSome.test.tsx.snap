@@ -76,6 +76,7 @@ exports[`CheckSome blurring the fields sets the touched prop for fields 1`] = `
         </div>
         <div>
           Field Errors: 
+          null
         </div>
       </div>
     </div>
@@ -159,6 +160,7 @@ exports[`CheckSome renders the initial form 1`] = `
         </div>
         <div>
           Field Errors: 
+          null
         </div>
       </div>
     </div>
@@ -198,6 +200,7 @@ exports[`CheckSome setting values to something still invalid updates changed, va
         </div>
         <div>
           Field Errors: 
+          null
         </div>
       </div>
     </div>
@@ -241,6 +244,7 @@ exports[`CheckSome setting values to something still invalid updates changed, va
         </div>
         <div>
           Field Errors: 
+          null
         </div>
       </div>
     </div>

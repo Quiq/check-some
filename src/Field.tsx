@@ -18,7 +18,7 @@ const CheckSomeField = ({name, children}: Props) => {
   const [touched, setTouched] = useState(false);
   const {values, errors: formErrors} = useContext(CheckSomeContext);
   const value = values[name];
-  const errors = formErrors ? formErrors[name] : null;
+  const errors = (formErrors && formErrors[name]) || null;
   const valid = !errors;
 
   return (
