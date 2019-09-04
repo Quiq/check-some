@@ -24,10 +24,10 @@ const TestField = ({label, value, onValueChanged, errors, valid, touched}) => (
   </div>
 );
 
-const TestForm = ({initialValues, rules}) => {
-  const [requiredStringValue, setRequiredStringValue] = useState(initialValues.requiredString);
-  const [numberValue, setNumberValue] = useState(initialValues.testNumber);
-  const [optionalStringValue, setOptionalStringValue] = useState(initialValues.optionalString);
+const TestForm = ({values, rules, initialValues = undefined}) => {
+  const [requiredStringValue, setRequiredStringValue] = useState(values.requiredString);
+  const [numberValue, setNumberValue] = useState(values.testNumber);
+  const [optionalStringValue, setOptionalStringValue] = useState(values.optionalString);
 
   return (
     <CheckSome
@@ -37,6 +37,7 @@ const TestForm = ({initialValues, rules}) => {
         optionalString: optionalStringValue,
       }}
       rules={rules}
+      initialValues={initialValues}
     >
       {({valid, changed, errors}) => (
         <form>
@@ -93,9 +94,7 @@ function updateField(field: HTMLElement, value: string) {
 }
 
 test('initial rendering', () => {
-  const {container, queryByText} = render(
-    <TestForm initialValues={initialValues} rules={testRules} />,
-  );
+  const {container, queryByText} = render(<TestForm values={initialValues} rules={testRules} />);
 
   expect(queryByText('Form Invalid')).not.toBeNull();
   expect(queryByText('Touched')).toBeNull();
@@ -105,7 +104,7 @@ test('initial rendering', () => {
 
 test('marking the fields touched', () => {
   const {container, getByLabelText, queryAllByText} = render(
-    <TestForm initialValues={initialValues} rules={testRules} />,
+    <TestForm values={initialValues} rules={testRules} />,
   );
 
   fireEvent.focus(getByLabelText('Required String'));
@@ -123,7 +122,7 @@ test('marking the fields touched', () => {
 
 test('setting the fields to valid values', () => {
   const {container, getByLabelText, queryByText} = render(
-    <TestForm initialValues={initialValues} rules={testRules} />,
+    <TestForm values={initialValues} rules={testRules} />,
   );
 
   updateField(getByLabelText('Required String'), 'spongebob');
@@ -136,7 +135,7 @@ test('setting the fields to valid values', () => {
 
 test('setting the fields to invalid values', () => {
   const {container, getByLabelText, queryByText} = render(
-    <TestForm initialValues={initialValues} rules={testRules} />,
+    <TestForm values={initialValues} rules={testRules} />,
   );
 
   updateField(getByLabelText('Required String'), 'spongebob');
@@ -144,5 +143,23 @@ test('setting the fields to invalid values', () => {
   updateField(getByLabelText('Optional String'), 'patrick');
 
   expect(queryByText('Form Invalid')).not.toBeNull();
+  expect(container).toMatchSnapshot();
+});
+
+test('using initialValues prop', () => {
+  const values = {
+    requiredString: 'spongebob',
+    testNumber: '7',
+    optionalString: 'patrick',
+  };
+
+  const {container, queryByText} = render(
+    <TestForm values={{...values}} rules={testRules} initialValues={{...values}} />,
+  );
+
+  expect(queryByText('Form Valid')).not.toBeNull();
+  expect(queryByText('Unchanged')).not.toBeNull();
+  expect(queryByText('Touched')).toBeNull();
+
   expect(container).toMatchSnapshot();
 });
