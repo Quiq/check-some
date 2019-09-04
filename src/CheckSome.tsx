@@ -1,4 +1,4 @@
-import React, {createContext} from 'react';
+import React, {createContext, useState} from 'react';
 import isEqual from 'lodash/isEqual';
 import CheckSomeField from './Field';
 import {ValidationErrors} from './globals';
@@ -15,47 +15,32 @@ export type CheckSomeChildProps<T> = {
   errors: ValidationGroupErrors<T>;
 };
 
-export type CheckSomeProps<T> = {
+interface CheckSomeOptions<T> {
   rules: ValidationGroupRules<T>;
   values: ValidationGroupValues<T>;
   initialValues?: ValidationGroupValues<T>;
+}
+
+export interface CheckSomeProps<T> extends CheckSomeOptions<T> {
   children: (props: CheckSomeChildProps<T>) => React.ReactNode;
-};
+}
 
 export const CheckSomeContext = createContext<{
   values: {[key: string]: any};
   errors: {[key: string]: ValidationErrors | undefined} | null;
 }>({values: {}, errors: {}});
 
-export default class CheckSome<T> extends React.Component<CheckSomeProps<T>> {
-  static Field = CheckSomeField;
+function useValidation<T>({rules, values, initialValues}: CheckSomeOptions<T>) {
+  const [compareAgainst] = useState(initialValues || values);
 
-  static defaultProps = {
-    rules: {},
-  };
-
-  initialValues: Object | null | undefined;
-
-  getInitialValues = () => {
-    if (this.props.initialValues) {
-      return this.props.initialValues;
-    }
-
-    if (!this.initialValues) {
-      this.initialValues = this.props.values;
-    }
-
-    return this.initialValues;
-  };
-
-  getErrors = (): ValidationGroupErrors<T> =>
-    Object.keys(this.props.rules).reduce((errors: ValidationGroupErrors<T>, keyValue) => {
+  const errors: ValidationGroupErrors<T> = Object.keys(rules).reduce(
+    (errors: ValidationGroupErrors<T>, keyValue) => {
       // @ts-ignore
       const key: keyof T = keyValue;
-      const rules = this.props.rules[key];
-      const value = this.props.values[key];
+      const ruleList = rules[key];
+      const value = values[key];
 
-      const newErrors = rules!.reduce(
+      const newErrors = ruleList!.reduce(
         (e: ValidationErrors | null, rule: ValidationRule<T[typeof key]>) => e || rule(value),
         null,
       );
@@ -71,20 +56,30 @@ export default class CheckSome<T> extends React.Component<CheckSomeProps<T>> {
       errors[key] = newErrors;
 
       return errors;
-    }, null);
+    },
+    null,
+  );
 
-  render() {
-    const {values} = this.props;
+  const valid = !errors;
+  const changed = !isEqual(values, compareAgainst);
 
-    const errors = this.getErrors();
-    const valid = !errors;
-
-    const changed = !isEqual(values, this.getInitialValues());
-
-    return (
-      <CheckSomeContext.Provider value={{values, errors}}>
-        {this.props.children({valid, errors, changed})}
-      </CheckSomeContext.Provider>
-    );
-  }
+  return {valid, errors, changed};
 }
+
+export const CheckSome = <T extends {}>({
+  rules,
+  values,
+  initialValues,
+  children,
+}: CheckSomeProps<T>) => {
+  const {valid, errors, changed} = useValidation({rules, values, initialValues});
+
+  return (
+    <CheckSomeContext.Provider value={{values, errors}}>
+      {children({valid, errors, changed})}
+    </CheckSomeContext.Provider>
+  );
+};
+CheckSome.Field = CheckSomeField;
+
+export default CheckSome;
