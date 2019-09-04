@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CheckSome blurring the fields sets the touched prop for fields 1`] = `
+exports[`initial rendering 1`] = `
 <div>
   <form>
     <div>
@@ -12,7 +12,7 @@ exports[`CheckSome blurring the fields sets the touched prop for fields 1`] = `
     </div>
     <div>
       Form Errors: 
-      {"requiredString":{"required":{}},"testNumber":{"required":{}}}
+      {"requiredString":{"required":{}},"testNumber":{"greaterThanZero":{"value":0}}}
     </div>
     <div
       class="CheckSomeField"
@@ -20,93 +20,12 @@ exports[`CheckSome blurring the fields sets the touched prop for fields 1`] = `
       <div
         class="field"
       >
-        <input
-          value=""
-        />
-        <div>
-          Field 
-          Invalid
-        </div>
-        <div>
-          Touched
-        </div>
-        <div>
-          Field Errors: 
-          {"required":{}}
-        </div>
-      </div>
-    </div>
-    <div
-      class="CheckSomeField"
-    >
-      <div
-        class="field"
-      >
-        <input
-          value=""
-        />
-        <div>
-          Field 
-          Invalid
-        </div>
-        <div>
-          Touched
-        </div>
-        <div>
-          Field Errors: 
-          {"required":{}}
-        </div>
-      </div>
-    </div>
-    <div
-      class="CheckSomeField"
-    >
-      <div
-        class="field"
-      >
-        <input
-          value=""
-        />
-        <div>
-          Field 
-          Valid
-        </div>
-        <div>
-          Touched
-        </div>
-        <div>
-          Field Errors: 
-          null
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-`;
-
-exports[`CheckSome renders the initial form 1`] = `
-<div>
-  <form>
-    <div>
-      Form 
-      Invalid
-    </div>
-    <div>
-      Unchanged
-    </div>
-    <div>
-      Form Errors: 
-      {"requiredString":{"required":{}},"testNumber":{"required":{}}}
-    </div>
-    <div
-      class="CheckSomeField"
-    >
-      <div
-        class="field"
-      >
-        <input
-          value=""
-        />
+        <label>
+          Required String
+          <input
+            value=""
+          />
+        </label>
         <div>
           Field 
           Invalid
@@ -126,9 +45,12 @@ exports[`CheckSome renders the initial form 1`] = `
       <div
         class="field"
       >
-        <input
-          value=""
-        />
+        <label>
+          Test Number
+          <input
+            value="0"
+          />
+        </label>
         <div>
           Field 
           Invalid
@@ -138,7 +60,7 @@ exports[`CheckSome renders the initial form 1`] = `
         </div>
         <div>
           Field Errors: 
-          {"required":{}}
+          {"greaterThanZero":{"value":0}}
         </div>
       </div>
     </div>
@@ -148,9 +70,12 @@ exports[`CheckSome renders the initial form 1`] = `
       <div
         class="field"
       >
-        <input
-          value=""
-        />
+        <label>
+          Optional String
+          <input
+            value=""
+          />
+        </label>
         <div>
           Field 
           Valid
@@ -168,7 +93,100 @@ exports[`CheckSome renders the initial form 1`] = `
 </div>
 `;
 
-exports[`CheckSome setting values to something still invalid updates changed, values, and errors 1`] = `
+exports[`marking the fields touched 1`] = `
+<div>
+  <form>
+    <div>
+      Form 
+      Invalid
+    </div>
+    <div>
+      Unchanged
+    </div>
+    <div>
+      Form Errors: 
+      {"requiredString":{"required":{}},"testNumber":{"greaterThanZero":{"value":0}}}
+    </div>
+    <div
+      class="CheckSomeField"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Required String
+          <input
+            value=""
+          />
+        </label>
+        <div>
+          Field 
+          Invalid
+        </div>
+        <div>
+          Touched
+        </div>
+        <div>
+          Field Errors: 
+          {"required":{}}
+        </div>
+      </div>
+    </div>
+    <div
+      class="CheckSomeField"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Test Number
+          <input
+            value="0"
+          />
+        </label>
+        <div>
+          Field 
+          Invalid
+        </div>
+        <div>
+          Touched
+        </div>
+        <div>
+          Field Errors: 
+          {"greaterThanZero":{"value":0}}
+        </div>
+      </div>
+    </div>
+    <div
+      class="CheckSomeField"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Optional String
+          <input
+            value=""
+          />
+        </label>
+        <div>
+          Field 
+          Valid
+        </div>
+        <div>
+          Touched
+        </div>
+        <div>
+          Field Errors: 
+          null
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`setting the fields to invalid values 1`] = `
 <div>
   <form>
     <div>
@@ -188,15 +206,18 @@ exports[`CheckSome setting values to something still invalid updates changed, va
       <div
         class="field"
       >
-        <input
-          value="spongebob"
-        />
+        <label>
+          Required String
+          <input
+            value="spongebob"
+          />
+        </label>
         <div>
           Field 
           Valid
         </div>
         <div>
-          Pristine
+          Touched
         </div>
         <div>
           Field Errors: 
@@ -210,15 +231,18 @@ exports[`CheckSome setting values to something still invalid updates changed, va
       <div
         class="field"
       >
-        <input
-          value="-2"
-        />
+        <label>
+          Test Number
+          <input
+            value="-2"
+          />
+        </label>
         <div>
           Field 
           Invalid
         </div>
         <div>
-          Pristine
+          Touched
         </div>
         <div>
           Field Errors: 
@@ -232,15 +256,18 @@ exports[`CheckSome setting values to something still invalid updates changed, va
       <div
         class="field"
       >
-        <input
-          value="patrick"
-        />
+        <label>
+          Optional String
+          <input
+            value="patrick"
+          />
+        </label>
         <div>
           Field 
           Valid
         </div>
         <div>
-          Pristine
+          Touched
         </div>
         <div>
           Field Errors: 
@@ -252,7 +279,7 @@ exports[`CheckSome setting values to something still invalid updates changed, va
 </div>
 `;
 
-exports[`CheckSome setting values to something valid updates changed, values, and errors 1`] = `
+exports[`setting the fields to valid values 1`] = `
 <div>
   <form>
     <div>
@@ -272,9 +299,105 @@ exports[`CheckSome setting values to something valid updates changed, values, an
       <div
         class="field"
       >
-        <input
-          value="spongebob"
-        />
+        <label>
+          Required String
+          <input
+            value="spongebob"
+          />
+        </label>
+        <div>
+          Field 
+          Valid
+        </div>
+        <div>
+          Touched
+        </div>
+        <div>
+          Field Errors: 
+          null
+        </div>
+      </div>
+    </div>
+    <div
+      class="CheckSomeField"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Test Number
+          <input
+            value="7"
+          />
+        </label>
+        <div>
+          Field 
+          Valid
+        </div>
+        <div>
+          Touched
+        </div>
+        <div>
+          Field Errors: 
+          null
+        </div>
+      </div>
+    </div>
+    <div
+      class="CheckSomeField"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Optional String
+          <input
+            value="patrick"
+          />
+        </label>
+        <div>
+          Field 
+          Valid
+        </div>
+        <div>
+          Touched
+        </div>
+        <div>
+          Field Errors: 
+          null
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`using initialValues prop 1`] = `
+<div>
+  <form>
+    <div>
+      Form 
+      Valid
+    </div>
+    <div>
+      Unchanged
+    </div>
+    <div>
+      Form Errors: 
+      null
+    </div>
+    <div
+      class="CheckSomeField"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Required String
+          <input
+            value="spongebob"
+          />
+        </label>
         <div>
           Field 
           Valid
@@ -294,9 +417,12 @@ exports[`CheckSome setting values to something valid updates changed, values, an
       <div
         class="field"
       >
-        <input
-          value="7"
-        />
+        <label>
+          Test Number
+          <input
+            value="7"
+          />
+        </label>
         <div>
           Field 
           Valid
@@ -316,9 +442,12 @@ exports[`CheckSome setting values to something valid updates changed, values, an
       <div
         class="field"
       >
-        <input
-          value="patrick"
-        />
+        <label>
+          Optional String
+          <input
+            value="patrick"
+          />
+        </label>
         <div>
           Field 
           Valid

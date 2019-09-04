@@ -1,104 +1,165 @@
-import React from 'react';
+import React, {useState} from 'react';
 import CheckSome from '../src';
-import {render, fireEvent, RenderResult} from '@testing-library/react';
+import {render, fireEvent} from '@testing-library/react';
 
 const required = value => (value || value === 0 ? null : {required: {}});
 
 const greaterThanZero = (value: number) => (value > 0 ? null : {greaterThanZero: {value}});
 
-const TestField = ({value, errors, valid, touched}) => (
+const TestField = ({label, value, onValueChanged, errors, valid, touched}) => (
   <div className="field">
-    <input defaultValue={value} />
+    <label>
+      {label}
+      <input
+        value={value}
+        onChange={e => {
+          const {value} = e.target;
+          onValueChanged(value);
+        }}
+      />
+    </label>
     <div>Field {valid ? 'Valid' : 'Invalid'}</div>
     <div>{touched ? 'Touched' : 'Pristine'}</div>
     <div>Field Errors: {JSON.stringify(errors)}</div>
   </div>
 );
 
-const TestForm = ({valid, changed, errors}) => (
-  <form>
-    <div>Form {valid ? 'Valid' : 'Invalid'}</div>
-    <div>{changed ? 'Changed' : 'Unchanged'}</div>
-    <div>Form Errors: {JSON.stringify(errors)}</div>
+const TestForm = ({values, rules, initialValues = undefined}) => {
+  const [requiredStringValue, setRequiredStringValue] = useState(values.requiredString);
+  const [numberValue, setNumberValue] = useState(values.testNumber);
+  const [optionalStringValue, setOptionalStringValue] = useState(values.optionalString);
 
-    <CheckSome.Field name="requiredString">
-      {fieldProps => <TestField {...fieldProps} />}
-    </CheckSome.Field>
+  return (
+    <CheckSome
+      values={{
+        requiredString: requiredStringValue,
+        testNumber: numberValue,
+        optionalString: optionalStringValue,
+      }}
+      rules={rules}
+      initialValues={initialValues}
+    >
+      {({valid, changed, errors}) => (
+        <form>
+          <div>Form {valid ? 'Valid' : 'Invalid'}</div>
+          <div>{changed ? 'Changed' : 'Unchanged'}</div>
+          <div>Form Errors: {JSON.stringify(errors)}</div>
 
-    <CheckSome.Field name="testNumber">
-      {fieldProps => <TestField {...fieldProps} />}
-    </CheckSome.Field>
+          <CheckSome.Field name="requiredString">
+            {fieldProps => (
+              <TestField
+                label="Required String"
+                value={requiredStringValue}
+                onValueChanged={setRequiredStringValue}
+                {...fieldProps}
+              />
+            )}
+          </CheckSome.Field>
 
-    <CheckSome.Field name="optionalString">
-      {fieldProps => <TestField {...fieldProps} />}
-    </CheckSome.Field>
-  </form>
-);
+          <CheckSome.Field name="testNumber">
+            {fieldProps => (
+              <TestField
+                label="Test Number"
+                value={numberValue.toString()}
+                onValueChanged={v => setNumberValue(Number.parseInt(v))}
+                {...fieldProps}
+              />
+            )}
+          </CheckSome.Field>
 
-describe('CheckSome', () => {
-  let r: RenderResult;
-  let testProps;
+          <CheckSome.Field name="optionalString">
+            {fieldProps => (
+              <TestField
+                label="Optional String"
+                value={optionalStringValue}
+                onValueChanged={setOptionalStringValue}
+                {...fieldProps}
+              />
+            )}
+          </CheckSome.Field>
+        </form>
+      )}
+    </CheckSome>
+  );
+};
 
-  beforeEach(() => {
-    const values = {
-      requiredString: '',
-      testNumber: undefined,
-      optionalString: '',
-    };
+const initialValues = {requiredString: '', testNumber: 0, optionalString: ''};
 
-    const rules = {
-      requiredString: [required],
-      testNumber: [required, greaterThanZero],
-    };
+const testRules = {requiredString: [required], testNumber: [greaterThanZero]};
 
-    testProps = {values, rules};
+function updateField(field: HTMLElement, value: string) {
+  fireEvent.focus(field);
+  fireEvent.change(field, {target: {value}});
+  fireEvent.blur(field);
+}
 
-    r = render(<CheckSome {...testProps}>{formProps => <TestForm {...formProps} />}</CheckSome>);
-  });
+test('initial rendering', () => {
+  const {container, queryByText} = render(<TestForm values={initialValues} rules={testRules} />);
 
-  it('renders the initial form', () => {
-    expect(r.container).toMatchSnapshot();
-    expect(r.getAllByText('Pristine').length).toBe(3);
-  });
+  expect(queryByText('Form Invalid')).not.toBeNull();
+  expect(queryByText('Touched')).toBeNull();
 
-  describe('blurring the fields', () => {
-    beforeEach(() => {
-      r.container.querySelectorAll('input').forEach(i => fireEvent.blur(i));
-    });
+  expect(container).toMatchSnapshot();
+});
 
-    it('sets the touched prop for fields', () => {
-      expect(r.container).toMatchSnapshot();
-      expect(r.getAllByText('Touched').length).toBe(3);
-    });
-  });
+test('marking the fields touched', () => {
+  const {container, getByLabelText, queryAllByText} = render(
+    <TestForm values={initialValues} rules={testRules} />,
+  );
 
-  describe('setting values to something still invalid', () => {
-    beforeEach(() => {
-      testProps.values = {
-        requiredString: 'spongebob',
-        testNumber: -2,
-        optionalString: 'patrick',
-      };
-      r.rerender(<CheckSome {...testProps}>{formProps => <TestForm {...formProps} />}</CheckSome>);
-    });
+  fireEvent.focus(getByLabelText('Required String'));
+  fireEvent.blur(getByLabelText('Required String'));
 
-    it('updates changed, values, and errors', () => {
-      expect(r.container).toMatchSnapshot();
-    });
-  });
+  fireEvent.focus(getByLabelText('Test Number'));
+  fireEvent.blur(getByLabelText('Test Number'));
 
-  describe('setting values to something valid', () => {
-    beforeEach(() => {
-      testProps.values = {
-        requiredString: 'spongebob',
-        testNumber: 7,
-        optionalString: 'patrick',
-      };
-      r.rerender(<CheckSome {...testProps}>{formProps => <TestForm {...formProps} />}</CheckSome>);
-    });
+  fireEvent.focus(getByLabelText('Optional String'));
+  fireEvent.blur(getByLabelText('Optional String'));
 
-    it('updates changed, values, and errors', () => {
-      expect(r.container).toMatchSnapshot();
-    });
-  });
+  expect(queryAllByText('Touched').length).toBe(3);
+  expect(container).toMatchSnapshot();
+});
+
+test('setting the fields to valid values', () => {
+  const {container, getByLabelText, queryByText} = render(
+    <TestForm values={initialValues} rules={testRules} />,
+  );
+
+  updateField(getByLabelText('Required String'), 'spongebob');
+  updateField(getByLabelText('Test Number'), '7');
+  updateField(getByLabelText('Optional String'), 'patrick');
+
+  expect(queryByText('Form Valid')).not.toBeNull();
+  expect(container).toMatchSnapshot();
+});
+
+test('setting the fields to invalid values', () => {
+  const {container, getByLabelText, queryByText} = render(
+    <TestForm values={initialValues} rules={testRules} />,
+  );
+
+  updateField(getByLabelText('Required String'), 'spongebob');
+  updateField(getByLabelText('Test Number'), '-2');
+  updateField(getByLabelText('Optional String'), 'patrick');
+
+  expect(queryByText('Form Invalid')).not.toBeNull();
+  expect(container).toMatchSnapshot();
+});
+
+test('using initialValues prop', () => {
+  const values = {
+    requiredString: 'spongebob',
+    testNumber: '7',
+    optionalString: 'patrick',
+  };
+
+  const {container, queryByText} = render(
+    <TestForm values={{...values}} rules={testRules} initialValues={{...values}} />,
+  );
+
+  expect(queryByText('Form Valid')).not.toBeNull();
+  expect(queryByText('Unchanged')).not.toBeNull();
+  expect(queryByText('Touched')).toBeNull();
+
+  expect(container).toMatchSnapshot();
 });
