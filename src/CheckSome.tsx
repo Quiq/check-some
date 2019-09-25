@@ -30,7 +30,11 @@ export const CheckSomeContext = createContext<{
   errors: {[key: string]: ValidationErrors | undefined} | null;
 }>({values: {}, errors: {}});
 
-function useValidation<T>({rules, values, initialValues}: CheckSomeOptions<T>) {
+export const useValidation = <T extends {}>({
+  rules,
+  values,
+  initialValues,
+}: CheckSomeOptions<T>) => {
   const [compareAgainst] = useState(initialValues || values);
 
   const errors: ValidationGroupErrors<T> = Object.keys(rules).reduce(
@@ -64,7 +68,7 @@ function useValidation<T>({rules, values, initialValues}: CheckSomeOptions<T>) {
   const changed = !isEqual(values, compareAgainst);
 
   return {valid, errors, changed};
-}
+};
 
 export const CheckSome = <T extends {}>({
   rules,
