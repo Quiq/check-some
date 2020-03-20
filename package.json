@@ -1,6 +1,6 @@
 {
   "name": "check-some",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Component to help with form validation in react",
   "author": "Nate Norberg",
   "license": "MIT",
@@ -95,5 +95,6 @@
   "files": [
     "dist"
   ],
-  "dependencies": {}
+  "dependencies": {},
+  "resolutions": {}
 }
