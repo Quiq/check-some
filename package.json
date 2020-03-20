@@ -1,6 +1,6 @@
 {
   "name": "check-some",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Component to help with form validation in react",
   "author": "Nate Norberg",
   "license": "MIT",
@@ -24,10 +24,16 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "src/**/*.js": ["prettier --write", "git add"]
+    "src/**/*.js": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "jest": {
-    "modulePaths": ["src", "node_modules"],
+    "modulePaths": [
+      "src",
+      "node_modules"
+    ],
     "rootDir": ".",
     "notify": true
   },
@@ -86,6 +92,8 @@
     "rollup-plugin-postcss": "^0.5.5",
     "typescript": "^3.6.2"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "dependencies": {}
 }
