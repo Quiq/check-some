@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import CheckSome from '../src';
+import CheckSome, {useValidation} from '../src';
 import {render, fireEvent} from '@testing-library/react';
 
 const required = value => (value || value === 0 ? null : {required: {}});
@@ -23,6 +23,63 @@ const TestField = ({label, value, onValueChanged, errors, valid, touched}) => (
     <div>Field Errors: {JSON.stringify(errors)}</div>
   </div>
 );
+
+const TestFormWithHooks = ({values, rules, initialValues = undefined}) => {
+  const [requiredStringValue, setRequiredStringValue] = useState(values.requiredString);
+  const [numberValue, setNumberValue] = useState(values.testNumber);
+  const [optionalStringValue, setOptionalStringValue] = useState(values.optionalString);
+
+  const {valid, changed, errors} = useValidation({
+    values: {
+      requiredString: requiredStringValue,
+      testNumber: numberValue,
+      optionalString: optionalStringValue,
+    },
+    rules,
+    initialValues,
+  });
+
+  return (
+    <form>
+      <div>Form {valid ? 'Valid' : 'Invalid'}</div>
+      <div>{changed ? 'Changed' : 'Unchanged'}</div>
+      <div>Form Errors: {JSON.stringify(errors)}</div>
+
+      <CheckSome.Field name="requiredString">
+        {fieldProps => (
+          <TestField
+            label="Required String"
+            value={requiredStringValue}
+            onValueChanged={setRequiredStringValue}
+            {...fieldProps}
+          />
+        )}
+      </CheckSome.Field>
+
+      <CheckSome.Field name="testNumber">
+        {fieldProps => (
+          <TestField
+            label="Test Number"
+            value={numberValue.toString()}
+            onValueChanged={v => setNumberValue(Number.parseInt(v))}
+            {...fieldProps}
+          />
+        )}
+      </CheckSome.Field>
+
+      <CheckSome.Field name="optionalString">
+        {fieldProps => (
+          <TestField
+            label="Optional String"
+            value={optionalStringValue}
+            onValueChanged={setOptionalStringValue}
+            {...fieldProps}
+          />
+        )}
+      </CheckSome.Field>
+    </form>
+  );
+};
 
 const TestForm = ({values, rules, initialValues = undefined}) => {
   const [requiredStringValue, setRequiredStringValue] = useState(values.requiredString);
